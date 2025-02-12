@@ -34,6 +34,7 @@
 
 .container_left {
     width: 35%;
+    display: flex;
     min-width: 300px;
     flex-direction: column;
     align-items: center;
@@ -82,7 +83,9 @@
 }
 
 .cards-versus {
-    padding-top: 0.2rem;
+    justify-items: center;
+    align-items: center;
+    padding-top: 0.1rem;
     display: flex;
     flex-direction: column;
     height: 300px;
@@ -114,8 +117,17 @@
 
 .card-infield {
     height: 11.2rem;
+    border: 1px solid #fff;
     width: 8rem;
     border-radius: 8px;
+}
+
+.card {
+    transition: transform 0.2;
+}
+
+.card:hover {
+    transform: scale(1.2);
 }
 
 
