@@ -18,11 +18,11 @@ const state = {
     },
     playerSide: {
         player1: "playerVs",
-        playerBox : document.querySelector("#playerVs"),
+        playerBox: document.querySelector("#playerVs"),
         computer: "computerVs",
         computerBox: document.querySelector("#computerVs"),
     }
-    
+
 };
 
 // Caminho da imagem das cartas 
@@ -92,7 +92,7 @@ async function drawSelectedCards(index) {
 
 // Remove as cartas
 async function removeAllCardsImages() {
-    let {computerBox, playerBox} = state.playerSide;
+    let { computerBox, playerBox } = state.playerSide;
     let imgElements = computerBox.querySelectorAll("img");
     imgElements.forEach((img) => img.remove());
 
@@ -107,16 +107,22 @@ async function setCardsField(cardId) {
 
     let computerCardId = await getRandomCardId();
 
-    state.fieldCards.player.style.display = "block";
-    state.fieldCards.computer.style.display = "block";
+    ShowHiddenCardFieldsImages(true);
 
-    state.fieldCards.player.src = cardData[cardId].img;
-    state.fieldCards.computer.src = cardData[computerCardId].img;
+    await hiddenCardDetails();
+
+    await drawCardsInfield(cardId, computerCardId);
 
     let duelResults = await checkDuelResults(cardId, computerCardId);
 
     await updateScore();
     await drawButton(duelResults);
+}
+
+async function drawCardsInfield(cardId, computerCardId) {
+    state.fieldCards.player.src = cardData[cardId].img;
+    state.fieldCards.computer.src = cardData[computerCardId].img;
+
 }
 
 async function updateScore() {
@@ -134,13 +140,13 @@ async function checkDuelResults(playerCardId, ComputerCardId) {
     let duelResults = "Draw";
     let playerCard = cardData[playerCardId];
 
-    if(playerCard.winOf.includes(ComputerCardId)) {
+    if (playerCard.winOf.includes(ComputerCardId)) {
         duelResults = "Win";
         state.score.playerScore++;
     }
 
-    if(playerCard.loseOf.includes(ComputerCardId)) {
-        duelResults = "Lose"; 
+    if (playerCard.loseOf.includes(ComputerCardId)) {
+        duelResults = "Lose";
         state.score.computerScore++;
     }
 
@@ -176,14 +182,37 @@ async function playAudio(status) {
 
     try {
         audio.play();
-    } catch {}
-    
+    } catch { }
+
 }
+
+async function ShowHiddenCardFieldsImages(value) {
+    if (value === true) {
+        state.fieldCards.player.style.display = "block";
+        state.fieldCards.computer.style.display = "block";
+    }
+    if (value === false) {
+        state.fieldCards.player.style.display = "none";
+        state.fieldCards.computer.style.display = "none";
+    }
+}
+
+// Função que está sendo usada em setCardsField para esconder os detalhes quando a carta é clicada
+async function hiddenCardDetails() {
+    state.cardSprites.avatar.src = "";
+    state.cardSprites.name.innerText = "";
+    state.cardSprites.type.innerText = "";
+};
 
 // Função init
 function init() {
+    ShowHiddenCardFieldsImages(false);
+
     drawCards(5, state.playerSide.player1);
     drawCards(5, state.playerSide.computer);
+
+    const bgm = document.getElementById("bgm");
+    bgm.play();
 }
 
 init();
